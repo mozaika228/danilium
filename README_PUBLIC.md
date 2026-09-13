@@ -87,7 +87,7 @@ Danilium should make it possible to start with a few simple lines and eventually
 
 Danilium is currently in active development.
 
-## Danilium 0.1 — Core Syntax + Interpreter
+## Danilium 0.1 - Core Syntax + Interpreter
 
 The first real implementation of the language. Its own:
 
@@ -97,14 +97,14 @@ The first real implementation of the language. Its own:
 * Type checker
 * Interpreter
 
-No `eval()` or similar shortcuts — Danilium programs are actually lexed, parsed, and executed by Danilium's own pipeline.
+No `eval()` or similar shortcuts - Danilium programs are actually lexed, parsed, and executed by Danilium's own pipeline.
 
 0.1 already includes control flow (`if` / `elif` / `else`, `while`) and functions (`fn`), along with real language semantics decided before the syntax:
 
 * A variable's type is fixed at first assignment; reassigning it requires the same type.
-* `if` / `while` blocks have their own scope — a variable introduced inside one disappears once the block ends.
+* `if` / `while` blocks have their own scope - a variable introduced inside one disappears once the block ends.
 * Functions close over the global scope, not over whatever block they were called from.
-* `if` / `while` conditions must be exactly `bool` — no truthiness on numbers or strings.
+* `if` / `while` conditions must be exactly `bool` - no truthiness on numbers or strings.
 
 ---
 
@@ -216,16 +216,16 @@ Every push and pull request to `main` runs this same suite via GitHub Actions.
 
 Danilium is being developed incrementally, one version at a time:
 
-- [x] **0.1** — Core syntax + interpreter
-- [ ] **0.2** — Extended control flow + language features
-- [ ] **0.3** — Modules + collections + error handling
-- [ ] **0.4** — Danilium IR + VM
-- [ ] **0.5** — Native compilation
-- [ ] **0.6** — Memory safety + FFI
-- [ ] **0.7** — Concurrency + async
-- [ ] **0.8** — Package manager + standard library
-- [ ] **0.9** — IDE tooling + optimizations
-- [ ] **1.0** — Stable language
+- [x] **0.1** - Core syntax + interpreter
+- [ ] **0.2** - Extended control flow + language features
+- [ ] **0.3** - Modules + collections + error handling
+- [ ] **0.4** - Danilium IR + VM
+- [ ] **0.5** - Native compilation
+- [ ] **0.6** - Memory safety + FFI
+- [ ] **0.7** - Concurrency + async
+- [ ] **0.8** - Package manager + standard library
+- [ ] **0.9** - IDE tooling + optimizations
+- [ ] **1.0** - Stable language
 
 The roadmap may change as the language evolves.
 
