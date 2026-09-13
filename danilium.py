@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Danilium 0.1 — CLI entry point.
+Danilium 0.2 - CLI entry point.
 
 Usage:
     python3 danilium.py hello.dnl     Run a Danilium source file
@@ -9,10 +9,25 @@ Usage:
 
 import sys
 
-from lexer import Lexer, LexError
+from lexer import Lexer, LexError, TokenType
 from parser import Parser, ParseError
 from type_checker import TypeChecker, DaniliumTypeError
 from interpreter import Interpreter, DaniliumRuntimeError
+
+
+def _do_end_balance(line: str) -> int:
+    """+1 per 'do' token, -1 per 'end' token on this line (0 if it doesn't lex)."""
+    try:
+        tokens = Lexer(line).tokenize()
+    except LexError:
+        return 0
+    balance = 0
+    for tok in tokens:
+        if tok.type == TokenType.DO:
+            balance += 1
+        elif tok.type == TokenType.END:
+            balance -= 1
+    return balance
 
 
 def run_source(source: str):
@@ -46,21 +61,31 @@ def run_file(path: str):
 
 
 def repl():
-    print("Danilium 0.1")
+    print("Danilium 0.2")
     print("Type an expression, or Ctrl+D / Ctrl+C to exit.")
     print()
     interp = Interpreter()
     checker = TypeChecker()
+    buffer_lines = []
+    open_blocks = 0
     while True:
+        prompt = ">>> " if open_blocks == 0 else "... "
         try:
-            line = input(">>> ")
+            line = input(prompt)
         except (EOFError, KeyboardInterrupt):
             print()
             break
-        if not line.strip():
+        if not line.strip() and open_blocks == 0:
             continue
+        buffer_lines.append(line)
+        open_blocks += _do_end_balance(line)
+        if open_blocks > 0:
+            continue  # keep collecting lines until every do/end is closed
+        source = "\n".join(buffer_lines)
+        buffer_lines = []
+        open_blocks = 0
         try:
-            tokens = Lexer(line).tokenize()
+            tokens = Lexer(source).tokenize()
             program = Parser(tokens).parse()
             checker.check_program(program)
             for stmt in program.statements:

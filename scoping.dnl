@@ -1,0 +1,9 @@
+x = 10
+
+if true do
+    y = 20
+    run(y)
+end
+
+run(x)
+run(y)

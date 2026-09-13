@@ -1,0 +1,12 @@
+age = 20
+
+if age >= 90 do
+    run("Ancient")
+elif age >= 18 do
+    run("Adult")
+else
+    run("Minor")
+end
+
+temperature = 32
+if temperature > 30 -> run("Hot")

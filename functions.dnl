@@ -1,0 +1,12 @@
+multiplier = 10
+
+fn square(x) do
+    return x * x
+end
+
+fn scaled(x) do
+    return x * multiplier
+end
+
+run(square(5))
+run(scaled(5))

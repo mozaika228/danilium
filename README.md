@@ -1,134 +1,89 @@
-<div align="center">
-
-<img src="assets/danilium-logo.jpeg" alt="Danilium Logo" width="500"/>
-
 # Danilium
 
-### SIMPLE • FLEXIBLE • POWERFUL
+Danilium is a programming language designed around simple, readable syntax and a clear language architecture.
 
-**A programming language designed to be easy to learn and powerful enough to build anything.**
-
-[![Status](https://img.shields.io/badge/status-in%20development-blue)]()
-[![Version](https://img.shields.io/badge/version-0.1.0-blue)]()
-[![License](https://img.shields.io/badge/license-TBD-green)]()
-
-</div>
-
----
-
-# 🚀 About Danilium
-
-**Danilium** is an experimental programming language designed around one simple idea:
-
-> **Make programming easy to learn without limiting what developers can build.**
-
-Danilium aims to provide a **low floor and a high ceiling**.
-
-Beginners should be able to quickly understand the basics of the language, while experienced developers should eventually be able to build complex software such as:
-
-- ⚡ High-performance applications
-- 🖥️ System software
-- 🌐 Network services
-- 🤖 AI systems
-- 🎮 Game engines
-- 🗄️ Databases
-- 🔗 Distributed systems
-- 🧠 Runtimes and virtual machines
-- 🔧 Developer tools
-
----
-
-# 🧠 Philosophy
-
-Danilium follows three core principles:
-
-## SIMPLE
-
-The language should be easy to understand.
-
-Simple programs should look simple:
+## Syntax
 
 ```danilium
-run("Hello, World!")
+# comments start with #
+
+x = 10
+
+if x > 5 -> run("big")
+
+if x >= 90 do
+    run("Ancient")
+elif x >= 18 do
+    run("Adult")
+else
+    run("Minor")
+end
+
+while x < 20 do
+    x += 1
+end
+
+fn square(n) do
+    return n * n
+end
+
+run(square(5))
 ```
 
-## FLEXIBLE
+* Blocks use `do ... end`.
+* `->` provides a single-statement form.
+* `elif` is used instead of `else if`.
+* Comparisons: `== != < > <= >=`.
+* Logic: `and or not`.
+* Conditions must evaluate to `bool`.
+* Compound assignment: `+= -= *= /=`.
+* `let` is optional syntax before an assignment (`let x = 10` is equivalent to `x = 10`).
 
-Danilium is designed to be flexible enough for different programming tasks.
+## Language Rules
 
-The language should remain readable whether you are writing a small script, a web service, a game, or a complex system.
+### Variables
 
-The goal is to provide a simple foundation that can grow with the developer.
-
----
-
-## POWERFUL
-
-Simple syntax should not mean limited capabilities.
-
-Danilium is designed with the long-term goal of supporting complex software, including:
-
-* ⚡ High-performance applications
-* 🖥️ System software
-* 🌐 Network services
-* 🤖 AI systems
-* 🎮 Game engines
-* 🗄️ Databases
-* 🔗 Distributed systems
-* 🧠 Runtimes and virtual machines
-* 🔧 Developer tools
-
-Danilium should make it possible to start with a few simple lines and eventually build large, complex systems.
-
----
-
-# 🛠️ Current Status
-
-Danilium is currently in active development.
-
-## Danilium 0.1
-
-Danilium 0.1 is the first real implementation of the language.
-
-It contains its own:
-
-* Lexer
-* Parser
-* Abstract Syntax Tree (AST)
-* Type checker
-* Interpreter
-
-The implementation does **not** use Python's `eval()` or similar shortcuts to execute Danilium programs.
-
-The current goal is to establish a solid language architecture that can be expanded in future versions.
-
----
-
-# 💻 Example
-
-A basic Danilium program:
+A variable's type is inferred at first assignment and then fixed.
 
 ```danilium
-name = "Danilium"
 age = 20
-active = true
-
-run(name)
-run(age)
-
-if active == true:
-    run("Danilium is running")
-else:
-    run("Danilium is inactive")
+age = 21       # valid
+age = "hello"  # type error
 ```
 
-The syntax is intentionally simple and readable.
+Assignment mutates the nearest existing binding found by walking outward through enclosing scopes. If the name does not exist, it is declared in the current scope.
 
-Danilium is currently focused on building a solid foundation for the language.
+### Scoping
 
----
+`if` and `while` blocks have their own scope. A variable first introduced inside a block is not available after the block ends.
 
-# 🏗️ Architecture
+Assignment can still modify an existing variable from an outer scope:
+
+```danilium
+x = 10
+
+while x < 20 do
+    x += 1
+end
+```
+
+Functions close over the global scope. They can read global variables, but do not capture block-local variables from the call site.
+
+### Conditions
+
+Conditions must evaluate exactly to `bool`.
+
+There is no Python-style truthiness:
+
+```danilium
+if 10 do
+    run("true")
+end
+```
+
+This produces a type error rather than treating `10` as `true`.
+
+## Architecture
 
 The current Danilium execution pipeline is:
 
@@ -148,13 +103,9 @@ Danilium source code
       Output
 ```
 
-Each stage has its own responsibility.
+The implementation has its own lexer, parser, AST, type checker and interpreter. Danilium programs are not executed through Python's `eval()`.
 
-This architecture keeps the language implementation modular and makes it easier to experiment with its design.
-
----
-
-# 📦 Project Structure
+## Project Structure
 
 ```text
 danilium/
@@ -165,25 +116,100 @@ danilium/
 ├── type_checker.py
 ├── interpreter.py
 ├── examples/
+├── tests/
+├── requirements-dev.txt
 └── README.md
 ```
 
----
+## Running Danilium
 
-# 🚀 Running Danilium
-
-Clone the repository and run a Danilium program:
+Clone the repository:
 
 ```bash
 git clone https://github.com/mozaika228/danilium.git
 cd danilium
-
-python3 danilium.py examples
 ```
 
----
+Run an example:
 
-# 🗺️ Roadmap
+```bash
+python3 danilium.py examples/hello_world.dnl
+python3 danilium.py examples/conditions.dnl
+python3 danilium.py examples/loop.dnl
+python3 danilium.py examples/functions.dnl
+```
+
+Run the REPL:
+
+```bash
+python3 danilium.py
+```
+
+The REPL supports multi-line `do ... end` blocks.
+
+## Testing
+
+Install development dependencies:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run the test suite:
+
+```bash
+pytest -v
+```
+
+The test suite covers example programs, control flow, functions, scoping and fixed variable types.
+
+GitHub Actions runs the test suite on pushes and pull requests to `main`.
+
+## Current Status
+
+Danilium is currently in active development.
+
+The current implementation provides:
+
+* Lexer
+* Parser
+* Abstract Syntax Tree (AST)
+* Type checker
+* Tree-walk interpreter
+* Variables and fixed types
+* Control flow
+* Functions
+* Scoping rules
+* Closures over the global scope
+* Compound assignment
+* Multi-line and single-line block syntax
+* REPL
+
+## Project Structure
+
+| File              | Stage             | Role                                |
+| ----------------- | ----------------- | ----------------------------------- |
+| `lexer.py`        | Lexer             | Source text → tokens                |
+| `ast_nodes.py`    | AST               | AST node definitions                |
+| `parser.py`       | Parser            | Tokens → AST                        |
+| `type_checker.py` | Semantic Analyzer | Type and scope checking             |
+| `interpreter.py`  | Interpreter       | Executes the AST                    |
+| `danilium.py`     | CLI               | Runs programs and provides the REPL |
+
+## Known Limitations
+
+Some language features are not implemented yet, including:
+
+* Fully typed function parameters
+* Function hoisting
+* Structs and enums
+* Collections
+* Modules
+* Dedicated error-handling types such as `Result` and `Option`
+* A dedicated IR / VM backend
+* Native compilation
+
+## Roadmap
 
 Danilium is being developed incrementally.
 
@@ -201,24 +227,17 @@ Current areas of development include:
 
 The roadmap may change as the language evolves.
 
----
+## Long-Term Vision
 
-# 🌎 Long-Term Vision
-
-Danilium is more than an experiment in syntax.
-
-Its core idea is simple:
+Danilium is built around a simple idea:
 
 > **Make programming easy to learn without limiting what developers can build.**
 
-Danilium aims to maintain a **low floor and a high ceiling**.
-
-A beginner should be able to understand simple Danilium code without unnecessary complexity.
-
-At the same time, the language should remain open to deeper programming concepts as the developer progresses.
+The language starts with readable syntax and a small core, while leaving room for deeper programming concepts and more advanced software.
 
 Danilium starts simple.
 
 The rest is built step by step.
 
 **Simple to learn. Flexible to use. Powerful to build.**
+
