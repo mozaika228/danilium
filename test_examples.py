@@ -8,7 +8,24 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+
+def find_repo_root(start: Path) -> Path:
+    """Walk upward from `start` until a directory containing danilium.py is found.
+
+    This makes the test independent of whether this file lives at the repo
+    root or under tests/ — both layouts are common and shouldn't break CI.
+    """
+    current = start
+    for _ in range(5):
+        if (current / "danilium.py").exists():
+            return current
+        current = current.parent
+    raise RuntimeError(
+        f"Could not find danilium.py by walking up from {start}"
+    )
+
+
+ROOT = find_repo_root(Path(__file__).resolve().parent)
 DANILIUM = ROOT / "danilium.py"
 EXAMPLES = ROOT / "examples"
 
