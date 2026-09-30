@@ -19,10 +19,11 @@ class Assignment(Node):
 
 
 class FunctionCall(Node):
-    def __init__(self, name, args, line):
+    def __init__(self, name, args, line, col=1):
         self.name = name
         self.args = args
         self.line = line
+        self.col = col
 
 
 class BinOp(Node):
@@ -62,6 +63,29 @@ class Identifier(Node):
     def __init__(self, name, line):
         self.name = name
         self.line = line
+
+
+class ListLiteral(Node):
+    def __init__(self, elements, line):
+        self.elements = elements
+        self.line = line
+
+
+class IndexExpr(Node):
+    def __init__(self, collection, index, line, col=1):
+        self.collection = collection
+        self.index = index
+        self.line = line
+        self.col = col
+
+
+class IndexAssignment(Node):
+    def __init__(self, collection, index, value, line, col=1):
+        self.collection = collection
+        self.index = index
+        self.value = value
+        self.line = line
+        self.col = col
 
 
 class If(Node):

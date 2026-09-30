@@ -13,6 +13,8 @@ class TokenType:
 
     LPAREN = "LPAREN"
     RPAREN = "RPAREN"
+    LBRACKET = "LBRACKET"
+    RBRACKET = "RBRACKET"
     COLON = "COLON"
     COMMA = "COMMA"
 
@@ -95,6 +97,8 @@ KEYWORDS = {
 SINGLE_CHAR_TOKENS = {
     "(": TokenType.LPAREN,
     ")": TokenType.RPAREN,
+    "[": TokenType.LBRACKET,
+    "]": TokenType.RBRACKET,
     ":": TokenType.COLON,
     ",": TokenType.COMMA,
 }

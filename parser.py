@@ -44,6 +44,9 @@ from ast_nodes import (
     NumberLiteral,
     BooleanLiteral,
     Identifier,
+    ListLiteral,
+    IndexExpr,
+    IndexAssignment,
     If,
     While,
     FnDecl,
@@ -66,10 +69,11 @@ COMPARISON_OPS = {
 
 
 class ParseError(Exception):
-    def __init__(self, message, line):
+    def __init__(self, message, line, column=1):
         super().__init__(message)
         self.message = message
         self.line = line
+        self.column = column
 
 
 class Parser:
@@ -103,6 +107,7 @@ class Parser:
             raise ParseError(
                 message or f"Expected {type_} but found {tok.type} ({tok.value!r})",
                 tok.line,
+                tok.col,
             )
         return self.advance()
 
@@ -146,11 +151,37 @@ class Parser:
             return self.parse_return()
         if self.check(TokenType.IDENTIFIER):
             nxt = self.peek(1).type
+            if nxt == TokenType.LBRACKET and self.is_index_assignment():
+                return self.parse_index_assignment()
             if nxt in (TokenType.EQUALS, TokenType.COLON):
                 return self.parse_assignment()
             if nxt in COMPOUND_OPS:
                 return self.parse_compound_assignment()
         return self.parse_expression()
+
+    def is_index_assignment(self):
+        depth = 0
+        for offset in range(1, len(self.tokens) - self.pos):
+            type_ = self.peek(offset).type
+            if type_ == TokenType.LBRACKET:
+                depth += 1
+            elif type_ == TokenType.RBRACKET:
+                depth -= 1
+                if depth == 0:
+                    return self.peek(offset + 1).type == TokenType.EQUALS
+        return False
+
+    def parse_index_assignment(self):
+        name_tok = self.expect(TokenType.IDENTIFIER)
+        bracket_tok = self.expect(TokenType.LBRACKET)
+        index = self.parse_expression()
+        self.expect(TokenType.RBRACKET, "Expected ']' after list index")
+        self.expect(TokenType.EQUALS, "Expected '=' after list index")
+        value = self.parse_expression()
+        return IndexAssignment(
+            Identifier(name_tok.value, name_tok.line), index, value,
+            name_tok.line, bracket_tok.col
+        )
 
     def parse_assignment(self):
         name_tok = self.expect(TokenType.IDENTIFIER)
@@ -336,8 +367,22 @@ class Parser:
             self.expect(TokenType.RPAREN)
             return expr
 
+        if tok.type == TokenType.LBRACKET:
+            line = self.advance().line
+            elements = []
+            if not self.check(TokenType.RBRACKET):
+                elements.append(self.parse_expression())
+                while self.check(TokenType.COMMA):
+                    self.advance()
+                    if self.check(TokenType.RBRACKET):
+                        break
+                    elements.append(self.parse_expression())
+            self.expect(TokenType.RBRACKET, "Expected ']' to close list literal")
+            return ListLiteral(elements, line)
+
         if tok.type == TokenType.IDENTIFIER:
             name_tok = self.advance()
+            expr = Identifier(name_tok.value, name_tok.line)
             if self.check(TokenType.LPAREN):
                 self.advance()
                 args = []
@@ -347,7 +392,14 @@ class Parser:
                         self.advance()
                         args.append(self.parse_expression())
                 self.expect(TokenType.RPAREN)
-                return FunctionCall(name_tok.value, args, name_tok.line)
-            return Identifier(name_tok.value, name_tok.line)
+                expr = FunctionCall(name_tok.value, args, name_tok.line, name_tok.col)
+            while self.check(TokenType.LBRACKET):
+                bracket_tok = self.advance()
+                index = self.parse_expression()
+                self.expect(TokenType.RBRACKET, "Expected ']' after list index")
+                expr = IndexExpr(expr, index, name_tok.line, bracket_tok.col)
+            return expr
 
-        raise ParseError(f"Unexpected token {tok.type} ({tok.value!r})", tok.line)
+        raise ParseError(
+            f"Unexpected token {tok.type} ({tok.value!r})", tok.line, tok.col
+        )

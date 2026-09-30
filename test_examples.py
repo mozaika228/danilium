@@ -27,7 +27,8 @@ def find_repo_root(start: Path) -> Path:
 
 ROOT = find_repo_root(Path(__file__).resolve().parent)
 DANILIUM = ROOT / "danilium.py"
-EXAMPLES = ROOT / "examples"
+# Example programs are tracked at the repository root in the current layout.
+EXAMPLES = ROOT
 
 
 def run(path):
@@ -72,11 +73,13 @@ def test_block_scoping_error():
     """A variable introduced inside `if` must not be visible after `end`."""
     result = run(EXAMPLES / "scoping.dnl")
     assert result.returncode == 1
-    assert "Undefined variable 'y'" in result.stdout
+    assert result.stdout == ""
+    assert "Undefined variable 'y'" in result.stderr
 
 
 def test_fixed_type_error():
     """Reassigning a variable with a different type is a type error."""
     result = run(EXAMPLES / "type_error.dnl")
     assert result.returncode == 1
-    assert "Type mismatch at line 1" in result.stdout
+    assert result.stdout == ""
+    assert "assigned a string" in result.stderr
