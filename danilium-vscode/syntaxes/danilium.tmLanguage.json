@@ -1,0 +1,96 @@
+{
+  "scopeName": "source.danilium",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#constants" },
+    { "include": "#operators" },
+    { "include": "#functions" },
+    { "include": "#punctuation" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.danilium",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.danilium",
+      "begin": "\"",
+      "beginCaptures": {
+        "0": { "name": "punctuation.definition.string.begin.danilium" }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": { "name": "punctuation.definition.string.end.danilium" }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.danilium",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.danilium",
+          "match": "\\b\\d+(?:\\.\\d+)?\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.danilium",
+          "match": "\\b(?:if|elif|else|while|fn|return|do|end|let)\\b"
+        },
+        {
+          "name": "keyword.operator.logical.danilium",
+          "match": "\\b(?:and|or|not)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.danilium",
+          "match": "\\b(?:true|false)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.danilium",
+          "match": "->|==|!=|<=|>=|\\+=|-=|\\*=|/=|[=+*/<>-]"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "name": "entity.name.function.danilium",
+          "match": "\\b[A-Za-z_][A-Za-z0-9_]*(?=\\s*\\()"
+        }
+      ]
+    },
+    "punctuation": {
+      "patterns": [
+        {
+          "name": "punctuation.section.group.danilium",
+          "match": "[()\\[\\]]"
+        },
+        {
+          "name": "punctuation.separator.danilium",
+          "match": ","
+        }
+      ]
+    }
+  }
+}

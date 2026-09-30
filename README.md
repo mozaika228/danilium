@@ -110,13 +110,19 @@ The implementation has its own lexer, parser, AST, type checker and interpreter.
 ```text
 danilium/
 ├── danilium.py
+├── danilium-vscode/
+│   ├── package.json
+│   ├── language-configuration.json
+│   └── syntaxes/
+│       └── danilium.tmLanguage.json
 ├── lexer.py
 ├── parser.py
 ├── ast_nodes.py
 ├── type_checker.py
 ├── interpreter.py
-├── examples/
-├── tests/
+├── hello_world.dnl
+├── test_*.py
+├── docs/
 ├── requirements-dev.txt
 └── README.md
 ```
@@ -133,19 +139,31 @@ cd danilium
 Run an example:
 
 ```bash
-python3 danilium.py examples/hello_world.dnl
-python3 danilium.py examples/conditions.dnl
-python3 danilium.py examples/loop.dnl
-python3 danilium.py examples/functions.dnl
+python danilium.py hello_world.dnl
+python danilium.py conditions.dnl
+python danilium.py loop.dnl
+python danilium.py functions.dnl
 ```
+
+On macOS or Linux, use `python3` instead of `python` if that is how Python is installed.
 
 Run the REPL:
 
 ```bash
-python3 danilium.py
+python danilium.py
 ```
 
 The REPL supports multi-line `do ... end` blocks.
+
+## VS Code
+
+The repository includes a small extension for `.dnl` file recognition, syntax highlighting, and basic indentation. To try it from the repository checkout, run:
+
+```bash
+code --extensionDevelopmentPath=./danilium-vscode .
+```
+
+This opens VS Code with the extension loaded in an Extension Development Host. LSP features such as editor diagnostics, autocomplete, and go-to-definition are not included yet.
 
 ## Testing
 

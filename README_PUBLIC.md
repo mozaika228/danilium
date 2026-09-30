@@ -168,13 +168,19 @@ This architecture keeps the language implementation modular and makes it easier 
 ```text
 danilium/
 ├── danilium.py
+├── danilium-vscode/
+│   ├── package.json
+│   ├── language-configuration.json
+│   └── syntaxes/
+│       └── danilium.tmLanguage.json
 ├── lexer.py
 ├── parser.py
 ├── ast_nodes.py
 ├── type_checker.py
 ├── interpreter.py
-├── examples/
-├── tests/
+├── hello_world.dnl
+├── test_*.py
+├── docs/
 ├── requirements-dev.txt
 ├── .github/
 │   └── workflows/
@@ -192,14 +198,26 @@ Clone the repository and run a Danilium program:
 git clone https://github.com/mozaika228/danilium.git
 cd danilium
 
-python3 danilium.py examples/hello_world.dnl
+python danilium.py hello_world.dnl
 ```
+
+On macOS or Linux, use `python3` instead of `python` if needed.
 
 Or start the REPL (supports multi-line `do ... end` blocks):
 
 ```bash
-python3 danilium.py
+python danilium.py
 ```
+
+## VS Code
+
+The repository includes a minimal VS Code extension for `.dnl` file recognition and syntax highlighting. To try it from the repository checkout, run:
+
+```bash
+code --extensionDevelopmentPath=./danilium-vscode .
+```
+
+The extension does not include LSP features yet.
 
 Run the test suite:
 
