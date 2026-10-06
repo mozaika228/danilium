@@ -1,0 +1,10 @@
+numbers = [10, 20, 30]
+
+append(numbers, 40)
+numbers[1] = 99
+
+run(numbers[1])
+run(len(numbers))
+
+remove(numbers, 0)
+run(numbers[0])
