@@ -1,7 +1,7 @@
 """
 Danilium Parser.
 
-Grammar (0.2):
+Grammar (0.3):
 
     program     := statement*
     statement   := let_stmt | if_stmt | while_stmt | fn_decl | return_stmt
