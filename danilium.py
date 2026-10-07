@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Danilium 0.2 - CLI entry point.
+Danilium 0.3 - CLI entry point.
 
 Usage:
     python3 danilium.py hello.dnl     Run a Danilium source file
@@ -64,7 +64,7 @@ def run_file(path: str):
 
 
 def repl():
-    print("Danilium 0.2")
+    print("Danilium 0.3")
     print("Type an expression, or Ctrl+D / Ctrl+C to exit.")
     print()
     interp = Interpreter()
