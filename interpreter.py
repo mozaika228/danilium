@@ -1,5 +1,5 @@
 """
-Danilium Interpreter - 0.2 runtime.
+Danilium Interpreter - 0.3 runtime.
 
 Mirrors the scoping rules enforced by the type checker:
     - assignment mutates the nearest existing binding, or declares a new
