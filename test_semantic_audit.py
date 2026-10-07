@@ -1,4 +1,4 @@
-"""Regression tests recording the observed Danilium 0.2 semantics.
+"""Regression tests recording the observed Danilium 0.3 semantics.
 
 These tests intentionally preserve current behavior, including known
 checker/runtime inconsistencies. Language design changes belong in a later
