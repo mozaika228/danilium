@@ -1,5 +1,5 @@
 """
-Danilium Semantic Analyzer - 0.2 rules.
+Danilium Semantic Analyzer - 0.3 rules.
 
 Variables:
     - type is inferred at first assignment and then fixed
